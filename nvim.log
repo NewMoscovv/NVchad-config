@@ -1,0 +1,4 @@
+WRN 2026-04-02T17:46:49.177 ?.41083    server_start:197: Failed to start server: operation not permitted: /var/folders/_k/y7n61fkx3xx5rz_j7g8zrz2c0000gp/T/nvim.kirsanov.mihail5/hzXNcs/nvim.41083.0
+WRN 2026-04-02T17:48:34.707 ?.41360    server_start:197: Failed to start server: operation not permitted: /var/folders/_k/y7n61fkx3xx5rz_j7g8zrz2c0000gp/T/nvim.kirsanov.mihail5/Xkc3B0/nvim.41360.0
+WRN 2026-04-02T17:48:34.708 ?.41362    server_start:197: Failed to start server: operation not permitted: /var/folders/_k/y7n61fkx3xx5rz_j7g8zrz2c0000gp/T/nvim.kirsanov.mihail5/xOYIKx/nvim.41362.0
+WRN 2026-04-02T22:30:36.694 ?.49414    server_start:197: Failed to start server: operation not permitted: /var/folders/_k/y7n61fkx3xx5rz_j7g8zrz2c0000gp/T/nvim.kirsanov.mihail5/J9L7CD/nvim.49414.0
