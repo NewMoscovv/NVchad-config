@@ -12,6 +12,25 @@ return {
     opts = {},
   },
   {
+    "nvim-tree/nvim-tree.lua",
+    opts = function(_, opts)
+      opts.view = opts.view or {}
+      opts.view.float = vim.tbl_deep_extend("force", opts.view.float or {}, {
+        enable = true,
+        quit_on_focus_loss = true,
+        open_win_config = {
+          relative = "editor",
+          border = "rounded",
+          width = 34,
+          height = 30,
+          row = 1,
+          col = 1,
+          style = "minimal",
+        },
+      })
+    end,
+  },
+  {
     "stevearc/conform.nvim",
     event = "BufWritePre",
     config = function()
