@@ -1,13 +1,11 @@
 return {
-
-  -- These are some examples, uncomment them if you want to see them work!
   {
-  "neovim/nvim-lspconfig",
-  event = { "BufReadPre", "BufNewFile" },
-  config = function()
-    require("configs.lsp")
-  end,
-},
+    "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require("configs.lsp")
+    end,
+  },
   {
     "stevearc/dressing.nvim",
     lazy = false,
@@ -37,33 +35,32 @@ return {
     end,
   },
 
-{
-  "rcarriga/nvim-dap-ui",
-  dependencies = {
-    "mfussenegger/nvim-dap",
-    "nvim-neotest/nvim-nio",
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "nvim-neotest/nvim-nio",
+    },
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
+
+      dapui.setup()
+
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+    end,
   },
-  config = function()
-    local dap = require("dap")
-    local dapui = require("dapui")
 
-    dapui.setup()
-
-    dap.listeners.after.event_initialized["dapui_config"] = function()
-      dapui.open()
-    end
-
-    dap.listeners.before.event_terminated["dapui_config"] = function()
-      dapui.close()
-    end
-
-    dap.listeners.before.event_exited["dapui_config"] = function()
-      dapui.close()
-    end
-  end,
-},
-
-  
   {
     "theHamsta/nvim-dap-virtual-text",
     dependencies = { "mfussenegger/nvim-dap" },
@@ -72,18 +69,34 @@ return {
     end,
   },
 
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = { "markdown" },
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    },
+    opts = {},
+  },
 
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
 
-  -- test new blink
-  -- { import = "nvchad.blink.lazyspec" },
+      local parsers = {
+        "html",
+        "css",
+        "markdown",
+        "markdown_inline",
+        "yaml",
+      }
 
-  -- {
-  -- 	"nvim-treesitter/nvim-treesitter",
-  -- 	opts = {
-  -- 		ensure_installed = {
-  -- 			"vim", "lua", "vimdoc",
-  --      "html", "css"
-  -- 		},
-  -- 	},
-  -- },
+      for _, parser in ipairs(parsers) do
+        if not vim.tbl_contains(opts.ensure_installed, parser) then
+          table.insert(opts.ensure_installed, parser)
+        end
+      end
+    end,
+  },
 }

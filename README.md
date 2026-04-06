@@ -12,6 +12,7 @@
 - ✅ **DAP** (delve) — отладка Go-кода
 - ✅ **Форматирование** — gofumpt + goimports для Go, stylua для Lua, prettier для CSS/HTML
 - ✅ **Git интеграция** — работа с Git через Telescope
+- ✅ **Markdown просмотр** — красивый рендер `.md` файлов прямо в Neovim
 - ✅ **Темы оформления** — ayu_dark (настраивается)
 
 ---
@@ -209,6 +210,25 @@ format_on_save = {
 }
 ```
 
+### Markdown просмотр
+
+**Настроено через `render-markdown.nvim`:**
+
+| Возможность | Описание |
+|------------|----------|
+| Встроенный рендер | Markdown отображается прямо в буфере, без браузера |
+| Заголовки и списки | Красивое оформление заголовков, bullets и таблиц |
+| Комфортное редактирование | В режиме редактирования показывается сырой Markdown |
+| Управление командами | `:RenderMarkdown toggle`, `:RenderMarkdown enable`, `:RenderMarkdown disable` |
+
+**Как пользоваться:**
+```vim
+:edit README.md
+:RenderMarkdown toggle
+```
+
+**Важно:** Для работы рендера используются Treesitter-парсеры `markdown`, `markdown_inline`, `html`, `yaml`.
+
 ### Git интеграция
 
 **Команды через Telescope:**
@@ -255,6 +275,7 @@ vim.api.nvim_set_hl(0, "NvDashAscii", { fg = "#00ff00" })  -- Зелёный ASC
 | `rcarriga/nvim-dap-ui` | UI для отладки |
 | `theHamsta/nvim-dap-virtual-text` | Виртуальный текст значений переменных |
 | `stevearc/dressing.nvim` | Улучшенный UI для select/input |
+| `MeanderingProgrammer/render-markdown.nvim` | Рендер Markdown прямо в буфере Neovim |
 
 ### Встроенные в NvChad (из `NvChad/NvChad`)
 
@@ -298,6 +319,7 @@ K   # Показать документацию (hover)
 ```vim
 <leader>gt  # Показать изменения
 <leader>cm  # История коммитов
+:RenderMarkdown toggle  # Включить/выключить рендер Markdown
 ```
 
 ---
@@ -313,6 +335,7 @@ K   # Показать документацию (hover)
 | Тема не применяется | `rm -rf ~/.local/share/nvim/base46` и перезапустить Neovim |
 | Форматирование не работает | `:ConformInfo` для диагностики |
 | Отладка не работает | Проверить `dlv version`, установить: `go install github.com/go-delve/delve/cmd/dlv@latest` |
+| Markdown рендер не работает | `:TSInstall markdown markdown_inline html yaml` и затем `:RenderMarkdown enable` |
 
 ### Логи и диагностика
 
@@ -324,6 +347,7 @@ K   # Показать документацию (hover)
 :DapInfo           # Информация об отладке (если доступно)
 :Lazy              # Менеджер плагинов
 :Lazy profile      # Время загрузки каждого плагина
+:RenderMarkdown toggle  # Переключить рендер Markdown
 ```
 
 ### Файлы логов

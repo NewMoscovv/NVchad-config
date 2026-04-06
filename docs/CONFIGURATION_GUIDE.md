@@ -1338,15 +1338,13 @@ format_on_save = {
 ### Полный код
 ```lua
 return {
-
-  -- These are some examples, uncomment them if you want to see them work!
   {
-  "neovim/nvim-lspconfig",
-  event = { "BufReadPre", "BufNewFile" },
-  config = function()
-    require("configs.lsp")
-  end,
-},
+    "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require("configs.lsp")
+    end,
+  },
   {
     "stevearc/dressing.nvim",
     lazy = false,
@@ -1376,32 +1374,31 @@ return {
     end,
   },
 
-{
-  "rcarriga/nvim-dap-ui",
-  dependencies = {
-    "mfussenegger/nvim-dap",
-    "nvim-neotest/nvim-nio",
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = {
+      "mfussenegger/nvim-dap",
+      "nvim-neotest/nvim-nio",
+    },
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
+
+      dapui.setup()
+
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+    end,
   },
-  config = function()
-    local dap = require("dap")
-    local dapui = require("dapui")
-
-    dapui.setup()
-
-    dap.listeners.after.event_initialized["dapui_config"] = function()
-      dapui.open()
-    end
-
-    dap.listeners.before.event_terminated["dapui_config"] = function()
-      dapui.close()
-    end
-
-    dap.listeners.before.event_exited["dapui_config"] = function()
-      dapui.close()
-    end
-  end,
-},
-
 
   {
     "theHamsta/nvim-dap-virtual-text",
@@ -1411,20 +1408,36 @@ return {
     end,
   },
 
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = { "markdown" },
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    },
+    opts = {},
+  },
 
+  {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function(_, opts)
+      opts.ensure_installed = opts.ensure_installed or {}
 
-  -- test new blink
-  -- { import = "nvchad.blink.lazyspec" },
+      local parsers = {
+        "html",
+        "css",
+        "markdown",
+        "markdown_inline",
+        "yaml",
+      }
 
-  -- {
-  -- 	"nvim-treesitter/nvim-treesitter",
-  -- 	opts = {
-  -- 		ensure_installed = {
-  -- 			"vim", "lua", "vimdoc",
-  --      "html", "css"
-  -- 		},
-  -- 	},
-  -- },
+      for _, parser in ipairs(parsers) do
+        if not vim.tbl_contains(opts.ensure_installed, parser) then
+          table.insert(opts.ensure_installed, parser)
+        end
+      end
+    end,
+  },
 }
 ```
 
@@ -1601,26 +1614,72 @@ y := 10     // ← y = 10
 z := x + y  // ← z = 15
 ```
 
-#### 8. Закомментированные плагины
+#### 8. render-markdown.nvim
 
 ```lua
--- test new blink
--- { import = "nvchad.blink.lazyspec" },
-
--- {
--- 	"nvim-treesitter/nvim-treesitter",
--- 	opts = {
--- 		ensure_installed = {
--- 			"vim", "lua", "vimdoc",
---      "html", "css"
--- 		},
--- 	},
--- },
+{
+  "MeanderingProgrammer/render-markdown.nvim",
+  ft = { "markdown" },
+  dependencies = {
+    "nvim-treesitter/nvim-treesitter",
+    "nvim-tree/nvim-web-devicons",
+  },
+  opts = {},
+}
 ```
 
-**nvchad.blink.lazyspec** — экспериментальная поддержка blink.cmp (альтернатива nvim-cmp)
+**Что делает:**
+- Рендерит Markdown прямо внутри окна Neovim
+- Улучшает отображение заголовков, списков, чекбоксов, таблиц и callouts
+- Не открывает внешний браузер и не требует отдельного preview-окна
 
-**nvim-treesitter** — закомментирован, т.к. Treesitter уже включён в NvChad по умолчанию
+**Почему `ft = { "markdown" }`:**
+- Плагин загружается только при открытии `.md` файлов
+- Это уменьшает лишнюю нагрузку при обычной работе с кодом
+
+**Как пользоваться:**
+- Открыть любой `.md` файл
+- В normal mode видеть отрендеренный Markdown
+- При редактировании строки работать с обычным исходным Markdown
+- При необходимости использовать команды:
+  - `:RenderMarkdown enable`
+  - `:RenderMarkdown disable`
+  - `:RenderMarkdown toggle`
+  - `:RenderMarkdown preview`
+
+#### 9. nvim-treesitter override
+
+```lua
+{
+  "nvim-treesitter/nvim-treesitter",
+  opts = function(_, opts)
+    opts.ensure_installed = opts.ensure_installed or {}
+
+    local parsers = {
+      "html",
+      "css",
+      "markdown",
+      "markdown_inline",
+      "yaml",
+    }
+
+    for _, parser in ipairs(parsers) do
+      if not vim.tbl_contains(opts.ensure_installed, parser) then
+        table.insert(opts.ensure_installed, parser)
+      end
+    end
+  end,
+}
+```
+
+**Что делает:**
+- Не переопределяет дефолтный список NvChad, а безопасно расширяет его
+- Гарантирует, что Markdown-рендерер получит обязательные grammar-файлы
+
+**Зачем нужны парсеры:**
+- `markdown` и `markdown_inline` — базовый разбор Markdown
+- `html` — HTML-комментарии и встроенные HTML-блоки
+- `yaml` — frontmatter вида `--- title: ... ---`
 
 ---
 

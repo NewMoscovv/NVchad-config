@@ -41,6 +41,7 @@
 |------------|-------|
 | **cargo/rustup** | Для установки stylua (Lua форматер) |
 | **npm/node** | Для prettier (CSS/HTML форматер) |
+| **Treesitter parsers** | Для корректного рендера Markdown через `render-markdown.nvim` |
 
 ---
 
@@ -144,6 +145,20 @@ nvim
 - `rcarriga/nvim-dap-ui` — UI отладки
 - `theHamsta/nvim-dap-virtual-text` — виртуальный текст
 - `stevearc/dressing.nvim` — улучшенный UI
+- `MeanderingProgrammer/render-markdown.nvim` — рендер Markdown прямо в буфере
+
+### Шаг 5: Проверка Treesitter-парсеров для Markdown
+
+```vim
+:TSInstall markdown markdown_inline html yaml
+```
+
+**Зачем это нужно:**
+- `markdown` и `markdown_inline` — обязательны для разбора Markdown
+- `html` — нужен для скрытия HTML-комментариев в Markdown
+- `yaml` — нужен для frontmatter в начале файла
+
+Если парсеры уже установлены, команда просто ничего критичного не сломает.
 
 ---
 
@@ -361,6 +376,18 @@ func TestExample(t *testing.T) {
 
 **Ожидаемый результат:** Запускается отладчик, открывается UI с переменными
 
+### 8. Проверка Markdown рендера
+
+```vim
+:edit README.md
+:RenderMarkdown enable
+```
+
+**Ожидаемый результат:**
+1. Заголовки, списки и таблицы в Markdown начинают отображаться в более читаемом виде
+2. В normal mode видно отрендеренный результат
+3. При редактировании строки/в insert mode остаётся удобный доступ к сырому Markdown
+
 ---
 
 ## 🐛 Устранение проблем
@@ -497,6 +524,26 @@ nvim
 -- { "автор/плагин" },
 ```
 
+### Проблема: Markdown не рендерится
+
+**Решение 1: Проверить парсеры**
+```vim
+:TSInstall markdown markdown_inline html yaml
+```
+
+**Решение 2: Включить плагин вручную**
+```vim
+:RenderMarkdown enable
+```
+
+**Решение 3: Проверить lazy-загрузку**
+
+Плагин загружается только для файлов типа `markdown`. Откройте файл `*.md`, а затем выполните:
+```vim
+:Lazy
+```
+Убедитесь, что `render-markdown.nvim` отмечен как loaded.
+
 ### Проблема: Ошибки при запуске
 
 **Решение 1: Посмотреть лог**
@@ -564,9 +611,11 @@ pip install pynvim
 - [ ] Delve установлен (для отладки)
 - [ ] StyLua установлен (для Lua)
 - [ ] Prettier установлен (для CSS/HTML)
+- [ ] Treesitter-парсеры `markdown`, `markdown_inline`, `html`, `yaml` установлены
 - [ ] Форматирование при сохранении работает
 - [ ] Git команды работают (внутри репозитория)
 - [ ] Отладка работает (`<leader>dt` запускает тест)
+- [ ] Markdown рендер работает (`:RenderMarkdown enable`)
 
 ---
 
@@ -595,6 +644,7 @@ nvim
 # 6. Проверить установку
 :Lazy
 :LspInfo
+:TSInstall markdown markdown_inline html yaml
 ```
 
 ---
@@ -608,6 +658,8 @@ nvim
 :Lazy clean     # Удалить неиспользуемые
 :Lazy check     # Проверить обновления
 :Lazy profile   # Показать время загрузки
+:RenderMarkdown enable   # Включить рендер Markdown
+:RenderMarkdown toggle   # Переключить рендер Markdown
 ```
 
 ### LSP команды
