@@ -1,9 +1,42 @@
 return {
   {
+    "nvim-telescope/telescope.nvim",
+    enabled = false,
+  },
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    opts = {
+      picker = {
+        enabled = true,
+        layouts = {
+          default = {
+            layout = {
+              backdrop = false,
+            },
+          },
+          vertical = {
+            layout = {
+              backdrop = false,
+            },
+          },
+        },
+      },
+    },
+  },
+  {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("configs.lsp")
+    end,
+  },
+  {
+    "SmiteshP/nvim-navic",
+    event = { "BufReadPre", "BufNewFile" },
+    config = function()
+      require("configs.navic").setup()
     end,
   },
   {
