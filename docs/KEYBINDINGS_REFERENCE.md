@@ -30,14 +30,15 @@
 | `fd` | Insert | `mappings.lua` | Выход из режима вставки (`<ESC>`) |
 | `<leader>h` | Normal | `mappings.lua` | Открыть главный экран (Dashboard) |
 
-### Git команды (через Telescope)
+### Git команды
 
 | Клавиши | Режим | Файл | Описание |
 |---------|-------|------|----------|
-| `<leader>gt` | Normal | `mappings.lua` | Показать изменения в Git (git status) |
-| `<leader>cm` | Normal | `mappings.lua` | История коммитов (git commits) |
+| `<leader>gt` | Normal | `mappings.lua` | Показать изменения в Git через `snacks.nvim` picker |
+| `<leader>cm` | Normal | `mappings.lua` | История коммитов через `snacks.nvim` picker |
+| `<leader>gg` | Normal | `mappings.lua` | Открыть `lazygit` во floating terminal |
 
-> ⚠️ **Важно:** Git команды работают **только внутри Git-репозитория**. Если файл не в репозитории, покажется предупреждение.
+> ⚠️ **Важно:** Git команды работают **только внутри Git-репозитория**. Если файл не в репозитории, покажется предупреждение. `lazygit` тоже открывается только когда для текущего буфера удалось определить корень репозитория.
 
 ### Go разработка (LSP)
 
@@ -173,8 +174,9 @@
 | `;` | n | mappings.lua | `:` (командная строка) |
 | `fd` | i | mappings.lua | `<ESC>` (выход из insert) |
 | `<leader>h` | n | mappings.lua | `:Nvdash` (Dashboard) |
-| `<leader>gt` | n | mappings.lua | Telescope git_status |
-| `<leader>cm` | n | mappings.lua | Telescope git_commits |
+| `<leader>gt` | n | mappings.lua | Snacks picker `git_status` |
+| `<leader>cm` | n | mappings.lua | Snacks picker `git_log` |
+| `<leader>gg` | n | mappings.lua | Открыть `:LazyGit` |
 | `<leader>gi` | n (Go) | configs/lsp.lua | organize_imports |
 | `<leader>db` | n | configs/dap.lua | toggle_breakpoint |
 | `<leader>dc` | n | configs/dap.lua | continue |
@@ -207,6 +209,7 @@
 |----------|---------|
 | Показать изменения | `<leader>gt` |
 | История коммитов | `<leader>cm` |
+| Открыть Lazygit | `<leader>gg` |
 | Открыть дерево файлов | `<leader>e` |
 
 ### Отладка тестов
@@ -238,6 +241,12 @@
 :verbose map <leader>gt
 ```
 Покажет где определён маппинг.
+
+Для `lazygit`:
+```vim
+:verbose map <leader>gg
+:LazyGit
+```
 
 ### 4. Посмотреть маппинги для буфера
 ```vim

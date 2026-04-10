@@ -41,6 +41,7 @@
 |------------|-------|
 | **cargo/rustup** | Для установки stylua (Lua форматер) |
 | **npm/node** | Для prettier (CSS/HTML форматер) |
+| **lazygit** | TUI-клиент для Git, запускается из Neovim по `<leader>gg` |
 | **Treesitter parsers** | Для корректного рендера Markdown через `render-markdown.nvim` |
 
 ---
@@ -274,6 +275,18 @@ yarn global add prettier
 prettier --version
 ```
 
+### Lazygit (опционально, но рекомендуется)
+
+**macOS (Homebrew):**
+```bash
+brew install lazygit
+```
+
+**Проверка:**
+```bash
+lazygit --version
+```
+
 ---
 
 ## ✅ Проверка установки
@@ -345,11 +358,15 @@ func main() {
 
 ```vim
 :edit main.go
-<leader>gt  # Git status
-<leader>cm  # Git commits
+<leader>gt  # Git status через snacks picker
+<leader>cm  # Git commits через snacks picker
+<leader>gg  # Lazygit
 ```
 
-**Ожидаемый результат:** Открывается Telescope со списком изменений/коммитов
+**Ожидаемый результат:**
+1. По `<leader>gt` открывается Git status picker
+2. По `<leader>cm` открывается Git log picker
+3. По `<leader>gg` открывается `lazygit` в floating terminal
 
 ### 7. Проверка отладки
 

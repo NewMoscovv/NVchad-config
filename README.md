@@ -11,7 +11,7 @@
 - ✅ **LSP** (gopls) — автодополнение, диагностика, навигация
 - ✅ **DAP** (delve) — отладка Go-кода
 - ✅ **Форматирование** — gofumpt + goimports для Go, stylua для Lua, prettier для CSS/HTML
-- ✅ **Git интеграция** — работа с Git через Telescope
+- ✅ **Git интеграция** — работа с Git через `snacks.nvim` picker и `lazygit`
 - ✅ **Markdown просмотр** — красивый рендер `.md` файлов прямо в Neovim
 - ✅ **Темы оформления** — ayu_dark (настраивается)
 
@@ -50,6 +50,7 @@
    - `<leader>h` — Dashboard
    - `<leader>gt` — Git status
    - `<leader>cm` — Git commits
+   - `<leader>gg` — Lazygit
    - `<leader>gi` — организовать Go импорты
    - `<leader>db/dc/dr/du/dt/dl` — отладка (DAP)
 
@@ -109,9 +110,10 @@ nvim
 | Клавиша | Действие |
 |---------|----------|
 | `<leader>h` | Открыть Dashboard |
-| `<leader>ff` | Найти файл (Telescope) |
+| `<leader>ff` | Найти файл (`snacks.nvim` picker) |
 | `<leader>fw` | Найти текст (live grep) |
 | `<leader>e` | Открыть дерево файлов (NvimTree) |
+| `<leader>gg` | Открыть Lazygit |
 | `;` | Командная строка |
 | `fd` (в insert mode) | Выход из режима вставки |
 
@@ -231,12 +233,13 @@ format_on_save = {
 
 ### Git интеграция
 
-**Команды через Telescope:**
+**Git-команды в конфигурации:**
 
 | Клавиши | Команда | Описание |
 |---------|---------|----------|
-| `<leader>gt` | `git_status` | Показать изменения в репозитории |
-| `<leader>cm` | `git_commits` | История коммитов |
+| `<leader>gt` | `snacks.picker.git_status` | Показать изменения в репозитории |
+| `<leader>cm` | `snacks.picker.git_log` | История коммитов |
+| `<leader>gg` | `:LazyGit` | Открыть `lazygit` в floating terminal |
 
 **Важно:** Команды работают только внутри Git-репозитория. Если файл не в репозитории, покажется предупреждение.
 
@@ -279,7 +282,7 @@ vim.api.nvim_set_hl(0, "NvDashAscii", { fg = "#00ff00" })  -- Зелёный ASC
 
 ### Встроенные в NvChad (из `NvChad/NvChad`)
 
-- **Telescope** — fuzzy поиск файлов и текста
+- **snacks.nvim picker** — fuzzy поиск файлов, текста и Git-списков
 - **Treesitter** — подсветка синтаксиса
 - **nvim-cmp** — движок автодополнения
 - **nvim-tree** — дерево файлов
@@ -297,7 +300,7 @@ vim.api.nvim_set_hl(0, "NvDashAscii", { fg = "#00ff00" })  -- Зелёный ASC
 
 ### 2. Используйте поиск файлов
 ```vim
-<leader>ff  # Найти файл по имени (Telescope)
+<leader>ff  # Найти файл по имени
 ```
 
 ### 3. Быстрая навигация по коду
@@ -319,6 +322,7 @@ K   # Показать документацию (hover)
 ```vim
 <leader>gt  # Показать изменения
 <leader>cm  # История коммитов
+<leader>gg  # Открыть Lazygit
 :RenderMarkdown toggle  # Включить/выключить рендер Markdown
 ```
 

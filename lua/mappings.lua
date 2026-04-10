@@ -36,6 +36,77 @@ local function snacks_git_picker(picker, missing_msg)
   end
 end
 
+local function open_floating_terminal(cmd, opts)
+  opts = opts or {}
+
+  local width = math.floor(vim.o.columns * 0.9)
+  local height = math.floor(vim.o.lines * 0.9)
+  local row = math.max(math.floor((vim.o.lines - height) / 2) - 1, 0)
+  local col = math.max(math.floor((vim.o.columns - width) / 2), 0)
+
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.bo[buf].bufhidden = "wipe"
+
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = "editor",
+    width = width,
+    height = height,
+    row = row,
+    col = col,
+    style = "minimal",
+    border = "rounded",
+    title = opts.title,
+    title_pos = "center",
+  })
+
+  vim.wo[win].number = false
+  vim.wo[win].relativenumber = false
+  vim.wo[win].signcolumn = "no"
+
+  local job_id = vim.fn.termopen(cmd, {
+    cwd = opts.cwd,
+    on_exit = function()
+      vim.schedule(function()
+        if vim.api.nvim_win_is_valid(win) then
+          vim.api.nvim_win_close(win, true)
+        end
+      end)
+    end,
+  })
+
+  if job_id <= 0 then
+    if vim.api.nvim_win_is_valid(win) then
+      vim.api.nvim_win_close(win, true)
+    end
+    vim.notify("Failed to start terminal command", vim.log.levels.ERROR)
+    return
+  end
+
+  vim.cmd("startinsert")
+end
+
+local function open_lazygit()
+  if vim.fn.executable("lazygit") ~= 1 then
+    vim.notify("lazygit not found in PATH. Install it first.", vim.log.levels.ERROR)
+    return
+  end
+
+  local root = git_root()
+  if not root then
+    vim.notify("Git repo not found for current file", vim.log.levels.WARN)
+    return
+  end
+
+  open_floating_terminal({ "lazygit", "-p", root }, {
+    cwd = root,
+    title = " Lazygit ",
+  })
+end
+
+vim.api.nvim_create_user_command("LazyGit", open_lazygit, {
+  desc = "Open Lazygit for current repository",
+})
+
 map("n", "<leader>fw", snacks_picker("grep"), {
   desc = "picker live grep",
 })
@@ -59,6 +130,9 @@ map("n", "<leader>cm", snacks_git_picker("git_log", "Git repo not found for curr
 })
 map("n", "<leader>gt", snacks_git_picker("git_status", "Git repo not found for current file"), {
   desc = "picker git status",
+})
+map("n", "<leader>gg", open_lazygit, {
+  desc = "open lazygit",
 })
 map("n", "<leader>pt", snacks_picker("buffers", { hidden = true, unloaded = true }), {
   desc = "picker buffers",

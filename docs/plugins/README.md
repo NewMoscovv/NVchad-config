@@ -44,6 +44,7 @@
 ## Git
 
 - `gitsigns.nvim`
+- [lazygit](./lazygit.md)
 
 ## Отладка
 
